@@ -1,0 +1,19 @@
+{
+  "name": "ether_demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "wallet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bip39": "^2.4.0",
+    "browserify": "^14.5.0",
+    "ethereumjs-tx": "^1.3.3",
+    "ethereumjs-wallet": "^0.6.0",
+    "mongodb": "^2.2.33",
+    "web3": "^1.0.0-beta.26"
+  }
+}
