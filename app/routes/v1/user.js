@@ -15,6 +15,21 @@ router.get('/', function (req, res) {
 });
 */
 
+router.get('/findbysecret',function(req,res){
+    //console.log(findbysecret);
+    var User = null;
+    UserModel
+        .find({secret:req.body.secret})
+        .then(function (user) {
+            console.log(req.body.secret);
+            if(user.length == 0){
+                res.json({ message: 'user not found' });
+            }
+            res.json(user);
+        }
+    );
+});
+
 router.get('/:id', function (req, res) {
     var Userid = req.params.id;
     UserModel
@@ -55,23 +70,7 @@ router.post('/create',function(req,res){
     );
 });
 
-router.post('/findbysecret',function(req,res){
-    var User = null;
-    UserModel
-        .find({secret:req.body.secret})
-        .then(function (user) {
-            console.log(req.body.secret);
-            if(user.length == 0){
-                res.json({ message: 'user not found' });
-            }
-            if (err){
-                res.send(err);
-            }else{
-                res.json(users);
-            }
-        }
-    );
-});
+
 
 router.post('/paybysecret',function(req,res){
     var User = null;
@@ -131,11 +130,11 @@ router.put('/:id',function (req, res) {
 
 
 // GET  http://localhost:3000/api/v1/user/test
-//router.get('/test', function (req, res) {
-//    res.json({
-//        message:"This is user api"
-//    });
-//});
+router.get('/test', function (req, res) {
+    res.json({
+        message:"This is user api"
+    });
+});
 
 //routerをモジュールとして扱う準備
 module.exports = router;

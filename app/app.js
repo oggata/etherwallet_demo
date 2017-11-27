@@ -28,6 +28,13 @@ var port = process.env.PORT || 3000; // port番号を指定
 var router = require('./routes/v1/');
 app.use('/api/v1/', router);
 
+// CORSを許可する
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 //サーバ起動
 app.listen(port);
 console.log('listen on port ' + port);
