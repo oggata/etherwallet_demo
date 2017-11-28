@@ -6,19 +6,23 @@ var UserModel = require('../../models/userModel.js');
 //curl 'http://localhost:3000/api/v1/user/test' --data 'secret=abc' -XGET
 router.get('/test', function (req, res) {
     res.json({
+        status:"ok",
         message:"This is user api"
     });
 });
 
-router.get('/findbysecret',function(req,res){
-    var _secret = decrypt(req.body.secret);
+router.get('/finduser',function(req,res){
+    console.log("finduser");
+    var _secret = encrypt(req.body.secret);
     var User = null;
     UserModel
         .find({secret:_secret})
         .then(function (user) {
-            console.log(req.body.secret);
             if(user.length == 0){
-                res.json({ message: 'user not found' });
+                res.json({ 
+                    status:"ok",
+                    message: 'user not found' 
+                });
             }
             res.json(user);
         }
@@ -26,14 +30,16 @@ router.get('/findbysecret',function(req,res){
 });
 
 router.post('/create',function(req,res){
+    console.log("create");
+    var _secret = encrypt(req.body.secret);
     UserModel
-        .find({secret:req.body.secret})
+        .find({secret:_secret})
         .then(function (user) {
-            //console.log(req.body.secret);
-            //console.log(user.length);
-            var _secret = decrypt(req.body.secret);
             if(user.length > 0){
-                res.json({ message: 'already user exists error' });
+                res.json({ 
+                    status:"error",
+                    message: 'already user exists error' 
+                });
             }else{
                 var User = new UserModel();
                 // データを詰め込む
@@ -43,6 +49,7 @@ router.post('/create',function(req,res){
                 User.email = req.body.email;
                 User.password = req.body.password;
                 User.secret = _secret;
+                User.score = 0;
                 // 保存処理
                 User.save(function(err) {
                     if (err){
@@ -50,7 +57,10 @@ router.post('/create',function(req,res){
                         res.send(err);
                     } else {
                         // エラーがなければ「Success!!」
-                        res.json({ message: 'Success!!' });
+                        res.json({ 
+                            status:"ok",
+                            message: 'Success!!' 
+                        });
                     }
                 });
             }
@@ -58,23 +68,27 @@ router.post('/create',function(req,res){
     );
 });
 
-router.post('/paybysecret',function(req,res){
+router.post('/pay',function(req,res){
+    console.log("pay");
     var User = null;
-    //var _secret = req.body.secret;
-    var _secret = decrypt(req.body.secret);
+    var _secret = encrypt(req.body.secret);
     var _amount = req.body.amount;
     UserModel
         .find({secret:_secret})
         .then(function (user) {
-            console.log(_secret);
-            console.log(user[0]);
             if(user.length == 0){
-                res.json({ message: 'user not found' });
+                res.json({ 
+                    status:"error",
+                    message: 'user not found' 
+                });
             }
             User = user[0]
             if(_amount > 0){
                 if(User.coin_amount <= _amount){
-                    res.json({ message: 'lack of balance' });
+                    res.json({ 
+                        status:"error",
+                        message: 'lack of balance' 
+                    });
                 }
             }
             User.coin_amount = Number(User.coin_amount) + Number(_amount);
@@ -82,9 +96,50 @@ router.post('/paybysecret',function(req,res){
                 if (err){
                     res.send(err);
                 } else {
-                    res.json({ message: 'Success!', user_coin_amount:User.coin_amount});
+                    res.json({ 
+                        status:"ok",
+                        message: 'Success!', 
+                        user_coin_amount:User.coin_amount
+                    });
                 }
             });
+        }
+    );
+});
+
+router.post('/sendscore',function(req,res){
+    var User = null;
+    var _secret = encrypt(req.body.secret);
+    var _score = req.body.score;
+    UserModel
+        .find({secret:_secret})
+        .then(function (user) {
+            if(user.length == 0){
+                res.json({ 
+                    status:"error",
+                    message: 'user not found' 
+                });
+            }
+            User = user[0]
+            if(User.score < _score){
+                User.score = Number(_score)
+                User.save(function(err) {
+                    if (err){
+                        res.send(err);
+                    } else {
+                        res.json({ 
+                            status:"ok",
+                            message: 'Success! new record'
+                        });
+                    }
+                });
+
+            }else{
+                res.json({ 
+                    status:"ok",
+                    message: 'records do not update' 
+                });
+            }
         }
     );
 });
@@ -100,6 +155,7 @@ function encrypt(planeText) {
     return cipheredText;
 }
 
+/*
 //復号化
 function decrypt(cipheredText) {
     var passowrd = 'passw0rd';
@@ -110,6 +166,7 @@ function decrypt(cipheredText) {
     //console.log(dec);
     return dec;
 }
+*/
 
 //routerをモジュールとして扱う準備
 module.exports = router;

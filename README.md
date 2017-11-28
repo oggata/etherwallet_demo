@@ -57,12 +57,11 @@ npm install --save-dev crypto
 
 #APIサンプルpost
 curl 'http://localhost:3000/api/v1/user/' --data 'name=aaaa&screen_name=aaaaa&coin_amount=100&email=test@gmail.com&password=test&secret=abc' -XPOST
-curl 'http://localhost:3000/api/v1/user/paybysecret' --data 'secret=abc&amount=10' -XPOST
-curl 'http://localhost:3000/api/v1/user/findbysecret' --data 'secret=abc' -XGET
-curl 'http://localhost:3000/api/v1/user/create' --data 'name=aaaa&screen_name=aaaaa&email=test@gmail.com&password=test&secret=abcd' -XPOST
-
-
-curl 'http://localhost:3000/api/v1/user/findbysecret' --data 'secret=abc' -XGET
+curl 'http://localhost:3000/api/v1/user/pay' --data 'secret=aaaa&amount=10' -XPOST
+curl 'http://localhost:3000/api/v1/user/finduser' --data 'secret=aaaa' -XGET
+curl 'http://localhost:3000/api/v1/user/create' --data 'name=aaaa&screen_name=aaaaa&email=test@gmail.com&password=test&secret=aaaa' -XPOST
+curl 'http://localhost:3000/api/v1/user/finduser' --data 'secret=6a27710f70c5da257964de22e370fbb8' -XGET
+curl 'http://localhost:3000/api/v1/user/sendscore' --data 'score=10' -XGET
 
 
 findAll

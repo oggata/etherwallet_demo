@@ -8,6 +8,7 @@ var UserSchema   = new Schema({
     email : String,
     password : String,
     secret: String,
+    score: Number,
 });
 
 // スキーマをモデルとしてコンパイルし、それをモジュールとして扱えるようにする
