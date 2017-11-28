@@ -27,6 +27,8 @@ var port = process.env.PORT || 3000; // port番号を指定
 
 var router = require('./routes/v1/');
 app.use('/api/v1/', router);
+app.use(express.static('static'));
+
 
 // CORSを許可する
 app.use(function(req, res, next) {
