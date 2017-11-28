@@ -53,12 +53,17 @@ npm install --save-dev mongoose
 npm install --save-dev body-parser
 npm install --save-dev moment
 npm install --save-dev crypto-js
+npm install --save-dev crypto
 
 #APIサンプルpost
 curl 'http://localhost:3000/api/v1/user/' --data 'name=aaaa&screen_name=aaaaa&coin_amount=100&email=test@gmail.com&password=test&secret=abc' -XPOST
 curl 'http://localhost:3000/api/v1/user/paybysecret' --data 'secret=abc&amount=10' -XPOST
 curl 'http://localhost:3000/api/v1/user/findbysecret' --data 'secret=abc' -XGET
 curl 'http://localhost:3000/api/v1/user/create' --data 'name=aaaa&screen_name=aaaaa&email=test@gmail.com&password=test&secret=abcd' -XPOST
+
+
+curl 'http://localhost:3000/api/v1/user/findbysecret' --data 'secret=abc' -XGET
+
 
 findAll
 curl -X GET http://localhost:3000/api/v1/user/
